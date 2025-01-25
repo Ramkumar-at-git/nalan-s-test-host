@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
     import { motion, AnimatePresence } from 'framer-motion';
     import { Send, RefreshCw, Plus, Minus } from 'lucide-react';
-    import axios from 'axios';
 
     interface Product {
       id: number;
@@ -106,7 +105,7 @@ import React, { useState } from 'react';
         }));
       };
 
-      const handleSubmit = async (e: React.FormEvent) => {
+      const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitError(null);
         if (!formData.firstName || !formData.phoneNumber || !formData.address) {
@@ -121,26 +120,8 @@ import React, { useState } from 'react';
           setProductSelectionError("Please select at least one product.");
           return;
         }
-
-        try {
-          const orderData = {
-            ...formData,
-            products: products.filter(p => formData.selectedProducts.includes(p.id)).map(p => ({
-              name: p.name,
-              quantity: p.quantity
-            }))
-          };
-          const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/orders/`, orderData);
-          console.log('Order submitted successfully:', response.data);
-          setIsModalOpen(true);
-        } catch (error: any) {
-          console.error('Error submitting order:', error);
-          if (error.response && error.response.data && error.response.data.message) {
-            setSubmitError(error.response.data.message);
-          } else {
-            setSubmitError('Failed to submit order. Please try again.');
-          }
-        }
+        console.log('Order submitted with data:', formData);
+        setIsModalOpen(true);
       };
 
       const handleClear = () => {
